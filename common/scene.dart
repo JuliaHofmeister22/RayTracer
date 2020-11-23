@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'jsonloader.dart';
 import 'maths.dart';
+import 'image.dart';
 
 
 class Intersection {
@@ -21,6 +22,8 @@ class Material {
     var ks = RGBColor.black();
     var n  = 10.0;
     var kr = RGBColor.black();
+    Image texture = null;
+
 
     Material();
 
@@ -29,6 +32,10 @@ class Material {
         ks = loader.loadObject('ks', (d)=>RGBColor.fromJson(d)) ?? ks;
         n  = loader.loadDouble('n')                             ?? n;
         kr = loader.loadObject('kr', (d)=>RGBColor.fromJson(d)) ?? kr;
+        var fileName             = loader.loadString('texture');
+          if(fileName != null){
+              texture = Image.fromFile(fileName);
+          }
     }
 }
 
@@ -46,6 +53,7 @@ class Surface {
         size     = loader.loadDouble('size')                                ?? size;
         frame    = loader.loadObject('frame',    (d)=>Frame.fromJson(d))    ?? frame;
         material = loader.loadObject('material', (d)=>Material.fromJson(d)) ?? material;
+
     }
 }
 

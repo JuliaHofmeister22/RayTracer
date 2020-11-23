@@ -11,12 +11,13 @@ var overrideResolution = null; // Size2i(32, 32);
 var overrideSamples    = null; // 1
 
 List<String> scenePaths = [
-    'scenes/P04_00_triangle.json',
-    'scenes/P04_01_scene.json',
-    'scenes/P04_02_animation001.json',
-    'scenes/P04_02_animation002.json',
-    'scenes/P04_02_animation003.json',
-    'scenes/P04_02_animation004.json',
+    'scenes/P02_06_balls_on_plane.json',
+    // 'scenes/P04_00_triangle.json',
+    // 'scenes/P04_01_scene.json',
+    // 'scenes/P04_02_animation001.json',
+    // 'scenes/P04_02_animation002.json',
+    // 'scenes/P04_02_animation003.json',
+    // 'scenes/P04_02_animation004.json',
 ];
 
 
@@ -122,6 +123,29 @@ Intersection intersectRayScene(Scene scene, Ray ray) {
     return intersection;
 }
 
+// helper function that maps point from sphere to image and returns color from image for sphere
+RGBColor textureColor(Scene scene, Intersection intersection){
+    Point p  = intersection.o;
+    var u; // theta
+    var v; // phi
+
+    u = acos(intersection.n.z);
+    v = atan2(intersection.n.y, intersection.n.x);
+    //print("$u $v");
+
+    // convert from [-pi/2, pi/2] -> [0,1]
+    u = (u + (pi/2)) / pi; 
+    // convert from [0,2pi] -> [0,1]
+    v = (v+pi) / (2*pi);
+
+    // convert to match width/height of texture image
+    u = u * intersection.material.texture.width;
+    v = v * intersection.material.texture.height;
+
+    return RGBColor.fromColor(intersection.material.texture.getPixel(u, v));
+
+}
+
 // Computes irradiance (as RGBColor) from scene along ray
 RGBColor irradiance(Scene scene, Ray ray, int depth) {
     Intersection intersection = intersectRayScene(scene, ray);
@@ -134,6 +158,11 @@ RGBColor irradiance(Scene scene, Ray ray, int depth) {
     RGBColor  ks = intersection.material.ks;
     double    n  = intersection.material.n;
     RGBColor  kr = intersection.material.kr;
+
+    if(intersection.material.texture != null){
+      //set kd to the texture in file
+      kd = textureColor(scene, intersection);
+    }
 
     // start accumulating irradiance
     RGBColor c = kd * scene.ambientIntensity;
