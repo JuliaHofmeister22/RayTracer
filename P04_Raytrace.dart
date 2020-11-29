@@ -11,15 +11,6 @@ var overrideResolution = null; // Size2i(32, 32);
 var overrideSamples    = null; // 1
 
 List<String> scenePaths = [
-<<<<<<< HEAD
-    'scenes/P02_06_balls_on_plane.json',
-    // 'scenes/P04_00_triangle.json',
-    // 'scenes/P04_01_scene.json',
-    // 'scenes/P04_02_animation001.json',
-    // 'scenes/P04_02_animation002.json',
-    // 'scenes/P04_02_animation003.json',
-    // 'scenes/P04_02_animation004.json',
-=======
 //    'scenes/P04_00_triangle.json',
 //    'scenes/P04_01_scene.json',
 //    'scenes/P04_02_animation001.json',
@@ -50,7 +41,6 @@ List<String> scenePaths = [
     'scenes/snow/snow_particles021.json',
     'scenes/snow/snow_particles022.json',
     'scenes/snow/snow_particles023.json'
->>>>>>> a8d1361bfc19300da3eb46c08ef5f84c21cbe5b2
 ];
 
 
