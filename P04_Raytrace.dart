@@ -11,12 +11,36 @@ var overrideResolution = null; // Size2i(32, 32);
 var overrideSamples    = null; // 1
 
 List<String> scenePaths = [
-    'scenes/P04_00_triangle.json',
-    'scenes/P04_01_scene.json',
-    'scenes/P04_02_animation001.json',
-    'scenes/P04_02_animation002.json',
-    'scenes/P04_02_animation003.json',
-    'scenes/P04_02_animation004.json',
+//    'scenes/P04_00_triangle.json',
+//    'scenes/P04_01_scene.json',
+//    'scenes/P04_02_animation001.json',
+//    'scenes/P04_02_animation002.json',
+//    'scenes/P04_02_animation003.json',
+//    'scenes/P04_02_animation004.json',
+//      'scenes/snow/snow_particles000.json',
+//    'scenes/snow/snow_particles001.json',
+//    'scenes/snow/snow_particles002.json',
+    'scenes/snow/snow_particles003.json',
+    'scenes/snow/snow_particles004.json',
+    'scenes/snow/snow_particles005.json',
+    'scenes/snow/snow_particles006.json',
+    'scenes/snow/snow_particles007.json',
+    'scenes/snow/snow_particles008.json',
+    'scenes/snow/snow_particles009.json',
+    'scenes/snow/snow_particles010.json',
+    'scenes/snow/snow_particles011.json',
+    'scenes/snow/snow_particles012.json',
+    'scenes/snow/snow_particles013.json',
+    'scenes/snow/snow_particles014.json',
+    'scenes/snow/snow_particles015.json',
+    'scenes/snow/snow_particles016.json',
+    'scenes/snow/snow_particles017.json',
+    'scenes/snow/snow_particles018.json',
+    'scenes/snow/snow_particles019.json',
+    'scenes/snow/snow_particles020.json',
+    'scenes/snow/snow_particles021.json',
+    'scenes/snow/snow_particles022.json',
+    'scenes/snow/snow_particles023.json'
 ];
 
 
