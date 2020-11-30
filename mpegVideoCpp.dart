@@ -587,7 +587,6 @@ int jo_processDU(var data, var A, var htdc, int DC) {
 List encode_mpeg(var data, Image img, int width, int height, int fps) {
   var originalData = data;
   int lastDCY = 128, lastDCCR = 128, lastDCCB = 128;
-  var bits = [data];
 
   // Sequence Header
   data.put4B(0x00, 0x00, 0x01, 0xB3);
@@ -626,7 +625,7 @@ List encode_mpeg(var data, Image img, int width, int height, int fps) {
         double y = vblock * 16 + (i / 16);
         int x = hblock * 16 + (i & 15);
         x = x >= width ? width - 1 : x;
-        y = y >= height ? height - 1 : y;
+        y = y >= height ? height - 1.0 : y;
         //const unsigned char *c = rgbx + y*width*4+x*4;
         // const unsigned char *c = rgbx + y*width*3+x*3;
         var c = img.getPixel(x, y);
@@ -657,17 +656,15 @@ List encode_mpeg(var data, Image img, int width, int height, int fps) {
               block[p + i] = Y[p + j];
             }
           }
-          lastDCY = jo_processDU(bits, block, s_jo_HTDC_Y, lastDCY);
+          lastDCY = jo_processDU(data, block, s_jo_HTDC_Y, lastDCY);
         }
       }
-      lastDCCB = jo_processDU(bits, CB, s_jo_HTDC_C, lastDCCB);
-      lastDCCR = jo_processDU(bits, CR, s_jo_HTDC_C, lastDCCR);
+      lastDCCB = jo_processDU(data, CB, s_jo_HTDC_C, lastDCCB);
+      lastDCCR = jo_processDU(data, CR, s_jo_HTDC_C, lastDCCR);
     }
   }
-  data.bufferBits(0, 7);
   data.put4B(0x00, 0x00, 0x01, 0xb7); // End of Sequence
   // size is very small, safe to cast to `int`
-  return (data - originalData);
 }
 
 void saveVideo(String path, List images, int width, int height, int fps,
@@ -677,7 +674,7 @@ void saveVideo(String path, List images, int width, int height, int fps,
   for (Image image in images) {
     for (int i = 0; i < repeatFrames; i++) {
       // encode image
-      data._data += encode_mpeg(data, image, width, height, fps);
+      encode_mpeg(data, image, width, height, fps);
     }
   }
   // encode sequence end
