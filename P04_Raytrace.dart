@@ -17,7 +17,6 @@ var width;
 var height;
 
 List<String> scenePaths = [
-<<<<<<< HEAD
 //    'scenes/P04_00_triangle.json',
 //    'scenes/P04_01_scene.json',
 //    'scenes/P04_02_animation001.json',
@@ -48,14 +47,13 @@ List<String> scenePaths = [
     // 'scenes/snow/snow_particles021.json',
     // 'scenes/snow/snow_particles022.json',
     // 'scenes/snow/snow_particles023.json'
-=======
-  'scenes/P04_00_triangle.json',
-  'scenes/P04_01_scene.json',
-  'scenes/P04_02_animation001.json',
-  'scenes/P04_02_animation002.json',
-  'scenes/P04_02_animation003.json',
-  'scenes/P04_02_animation004.json',
->>>>>>> 65594e3e5b0703f51ae7bc9e278949fb8a1d20b3
+
+  // 'scenes/P04_00_triangle.json',
+  // 'scenes/P04_01_scene.json',
+  // 'scenes/P04_02_animation001.json',
+  // 'scenes/P04_02_animation002.json',
+  // 'scenes/P04_02_animation003.json',
+  // 'scenes/P04_02_animation004.json',
 ];
 
 // Determines if given ray intersects any surface in the scene.
