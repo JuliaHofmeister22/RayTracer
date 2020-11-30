@@ -9,20 +9,20 @@ import 'common/scene.dart';
 import 'mpegVideoCpp.dart';
 
 var writeImageInBinary = true;
-var overrideResolution = null; // Size2i(32, 32);
-var overrideSamples = null; // 1
+var overrideResolution = Size2i(32, 32); // Size2i(32, 32);
+var overrideSamples = 1; // 1
 
 // added by Rose
 var width;
 var height;
 
 List<String> scenePaths = [
-  'scenes/P04_00_triangle.json',
+  // 'scenes/P04_00_triangle.json',
   // 'scenes/P04_01_scene.json',
-  // 'scenes/P04_02_animation001.json',
-  // 'scenes/P04_02_animation002.json',
-  // 'scenes/P04_02_animation003.json',
-  // 'scenes/P04_02_animation004.json',
+  'scenes/P04_02_animation001.json',
+  'scenes/P04_02_animation002.json',
+  'scenes/P04_02_animation003.json',
+  'scenes/P04_02_animation004.json',
 ];
 
 // Determines if given ray intersects any surface in the scene.
@@ -238,7 +238,7 @@ void main() {
     width = scene.resolution.width;
     height = scene.resolution.height;
     var seconds =
-        watch.elapsedMilliseconds / 1000.0; // determine elapsed time in seconds
+        watch.elapsedMilliseconds / 100000.0; // determine elapsed time in seconds
 
     image.saveImage(ppmPath,
         asBinary: writeImageInBinary); // write raytraced image to PPM file
@@ -249,7 +249,6 @@ void main() {
     print('    time:  $seconds seconds'); // note: includes time for saving file
   }
 
-  // correct?
-  // added by Rose
-  saveVideo('images/', listImages, width, height, 4);
+  saveVideo('images/video3.mpg', listImages, width, height, 24,
+      repeatFrames: 24);
 }

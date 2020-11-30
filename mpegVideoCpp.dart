@@ -359,7 +359,7 @@ const s_jo_ZigZag = [
 // wrapper for put1B, put4b, put8B, data.bufferBits
 
 class BitWriter {
-  List _data = [];
+  List<int> _data = [];
   int _bitbuf = 0, _bitcnt = 0;
 
   Uint8List getData() {
@@ -532,7 +532,7 @@ int jo_processDU(var data, var A, var htdc, int DC) {
   int aDC = DC < 0 ? -DC : DC;
   int size = 0;
   int tempval = aDC;
-  while (tempval == true) {
+  while (tempval > 0) {
     size++;
     tempval >>= 1;
   }
@@ -564,7 +564,7 @@ int jo_processDU(var data, var A, var htdc, int DC) {
       }
     }
     // if (!size) {
-    if (size == false) {
+    if (size == 0) {
       data.bufferBits(1, 6);
       data.bufferBits(run, 6);
       if (AC < -127) {
@@ -585,47 +585,20 @@ int jo_processDU(var data, var A, var htdc, int DC) {
 // takes in rgb image and breaks it up
 // unsigned char *mem = data
 List encode_mpeg(var data, Image img, int width, int height, int fps) {
-  var originalData = data;
   int lastDCY = 128, lastDCCR = 128, lastDCCB = 128;
 
-  // Sequence Header
-  data.put4B(0x00, 0x00, 0x01, 0xB3);
-  // 12 bits for width, height
-  data.put1B((width >> 4) & 0xFF);
-  data.put1B(((width & 0xF) << 4) | ((height >> 8) & 0xF));
-  data.put1B(height & 0xFF);
-  // aspect ratio, framerate
-  if (fps <= 24) {
-    data.put1B(0x12);
-  } else if (fps <= 25) {
-    data.put1B(0x13);
-  } else if (fps <= 30) {
-    data.put1B(0x15);
-  } else if (fps <= 50) {
-    data.put1B(0x16);
-  } else {
-    data.put1B(0x18); // 60fps
-  }
-  data.put4B(
-      0xFF, 0xFF, 0xE0, 0xA0); // used to say put8b, hope I changed this right
-
-  data.put8B(0x00, 0x00, 0x01, 0xB8, 0x80, 0x08, 0x00, 0x40); // GOP header
-  data.put8B(0x00, 0x00, 0x01, 0x00, 0x00, 0x0C, 0x00, 0x00); // PIC header
-  data.put4B(0x00, 0x00, 0x01, 0x01); // Slice header
-  data.bufferBits(0x10, 6);
-
-  for (int vblock = 0; vblock < (height + 15) / 16; vblock++) {
-    for (int hblock = 0; hblock < (width + 15) / 16; hblock++) {
+  for (int vblock = 0; vblock < (height / 16.0).ceil(); vblock++) {
+    for (int hblock = 0; hblock < (width / 16.0).ceil(); hblock++) {
       data.bufferBits(3, 2);
 
       var Y = List<double>(256);
       var CBx = List<double>(256);
       var CRx = List<double>(256);
       for (int i = 0; i < 256; ++i) {
-        double y = vblock * 16 + (i / 16);
+        int y = vblock * 16 + (i ~/ 16);
         int x = hblock * 16 + (i & 15);
         x = x >= width ? width - 1 : x;
-        y = y >= height ? height - 1.0 : y;
+        y = y >= height ? height - 1 : y;
         //const unsigned char *c = rgbx + y*width*4+x*4;
         // const unsigned char *c = rgbx + y*width*3+x*3;
         var c = img.getPixel(x, y);
@@ -663,13 +636,38 @@ List encode_mpeg(var data, Image img, int width, int height, int fps) {
       lastDCCR = jo_processDU(data, CR, s_jo_HTDC_C, lastDCCR);
     }
   }
-  data.put4B(0x00, 0x00, 0x01, 0xb7); // End of Sequence
-  // size is very small, safe to cast to `int`
 }
 
 void saveVideo(String path, List images, int width, int height, int fps,
     {repeatFrames: 1}) {
   var data = BitWriter();
+
+  // Sequence Header
+  data.put4B(0x00, 0x00, 0x01, 0xB3);
+  // 12 bits for width, height
+  data.put1B((width >> 4) & 0xFF);
+  data.put1B(((width & 0xF) << 4) | ((height >> 8) & 0xF));
+  data.put1B(height & 0xFF);
+  // aspect ratio, framerate
+  if (fps <= 24) {
+    data.put1B(0x12);
+  } else if (fps <= 25) {
+    data.put1B(0x13);
+  } else if (fps <= 30) {
+    data.put1B(0x15);
+  } else if (fps <= 50) {
+    data.put1B(0x16);
+  } else {
+    data.put1B(0x18); // 60fps
+  }
+  data.put4B(
+      0xFF, 0xFF, 0xE0, 0xA0); // used to say put8b, hope I changed this right
+
+  data.put8B(0x00, 0x00, 0x01, 0xB8, 0x80, 0x08, 0x00, 0x40); // GOP header
+  data.put8B(0x00, 0x00, 0x01, 0x00, 0x00, 0x0C, 0x00, 0x00); // PIC header
+  data.put4B(0x00, 0x00, 0x01, 0x01); // Slice header
+  data.bufferBits(0x10, 6);
+
   // encode sequence header
   for (Image image in images) {
     for (int i = 0; i < repeatFrames; i++) {
@@ -678,6 +676,8 @@ void saveVideo(String path, List images, int width, int height, int fps,
     }
   }
   // encode sequence end
+  data.put4B(0x00, 0x00, 0x01, 0xb7); // End of Sequence
+
 
   // write encoded video out to file
   var fp = File(path);
