@@ -18,11 +18,11 @@ var height;
 
 List<String> scenePaths = [
   'scenes/P04_00_triangle.json',
-  'scenes/P04_01_scene.json',
-  'scenes/P04_02_animation001.json',
-  'scenes/P04_02_animation002.json',
-  'scenes/P04_02_animation003.json',
-  'scenes/P04_02_animation004.json',
+  // 'scenes/P04_01_scene.json',
+  // 'scenes/P04_02_animation001.json',
+  // 'scenes/P04_02_animation002.json',
+  // 'scenes/P04_02_animation003.json',
+  // 'scenes/P04_02_animation004.json',
 ];
 
 // Determines if given ray intersects any surface in the scene.
