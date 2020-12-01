@@ -53,7 +53,7 @@ Author
 ------------------|-------------
 names             | Rose White, Julia Hofmeister, Courtney Masters
 computer + OS     | Windows Latitude 5401, MacBook Pro BigSur, MacBook Pro 
-time to complete  | <!-- honestly who the heck knows -->
+time to complete  | 50 hours
 additional help   | Dr. Denning
 </div>
 
@@ -120,6 +120,12 @@ Courtney's Feature - Texture Mapping
 
 Rose's Feature - Video Encoder
 -------------------------
+The video encoder takes the raytracter's rendered images and stores them in an mpeg video. This was accomplished by taking working C++ code that already performed this feature, and translating it into dart. Dr. Denning also provided his own changes to the code to make the "code translation" process easier.
+
+Syntax error bugs were the most troublesome. Fortunately if there are any bugs in the code, it is REALLY obvious. My video had read some bits and bytes wrong and was beginning to output skewed images. Another time, my video would just start and stop really fast. These were clear signs that something was wrong, and these implementations were some of my bigger bugs.
+
+As mentioned above, I'm fairly confident no bugs remain since the video converter would give obvious signals that something was wrong if it was. Either the image would appear out of place, distorted, or would just not play. Since the algorithms were already written for me, the bugs were a cause of my incorrect implementation, either of dart syntax or bit/byte factors.
+
 
 
 Creative Artifact (Julia) - *cue Elsa singing ‘Let it Go’* 
@@ -143,17 +149,10 @@ Don't include readings, lectures, but do include any help from people (including
 How did you discuss the problem with others? (ex: white-board algorithms, looking over code for bugs, looking at print out results, etc.)
 -->
 
-<!-- ... -->
-
-
-
-<!--
-Since this is an individual assignment, if you worked with a partner, assert below that the work you are turning in is your own work, and that you only did "whiteboard" work as a group.
-Give one sentence explaining what each of you contributed.
-If you used the code from the lab challenge, explain what is shared between you and your lab partner.
--->
-
-<!-- ... -->
+Rose - My help came mostly from Dr. Denning, getting more information and advice on how to "translate" c++ code to dart code. I consulted with Courtney and Julia on some of my bugs, and made many visits to stack overflow.
+My problems were mainly syntax-based. I'm still not super familiar with Dart and bit/ byte transfering, so there was a lot I had to learn to successfully implement the Mpeg Video Converter. 
+I spent probably two hours writing code, and 24+ hours debugging. I also spent around 5 hours discussing the code with others (Dr. Denning and team).
+I learned a lot about dart and bit transfering through this project. I felt under-prepared to do this specific part of the project though and probably would've chosen a different elective if I could go back. I also felt bad 1) becasue I kept slacking Dr. Denning for three days straight for help and 2) my work held the rest of the team back from completing the project in the time they hoped to have it finished.
 
 
 
