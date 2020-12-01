@@ -9,8 +9,8 @@ import 'common/scene.dart';
 import 'mpegVideoCpp.dart';
 
 var writeImageInBinary = true;
-var overrideResolution = null; // Size2i(32, 32);
-var overrideSamples = null; // 1
+var overrideResolution = Size2i(32, 32); // Size2i(32, 32);
+var overrideSamples = 1; // 1
 
 // added by Rose
 var width;
@@ -24,11 +24,11 @@ List<String> scenePaths = [
 //    'scenes/P04_02_animation003.json',
 //    'scenes/P04_02_animation004.json',
 
-//    'scenes/snow/snow_particles000.json',
-//   'scenes/snow/snow_particles001.json',
-//    'scenes/snow/snow_particles002.json',
-//     'scenes/snow/snow_particles003.json',
-//     'scenes/snow/snow_particles004.json',
+   'scenes/snow/snow_particles000.json',
+  'scenes/snow/snow_particles001.json',
+   'scenes/snow/snow_particles002.json',
+    'scenes/snow/snow_particles003.json',
+    'scenes/snow/snow_particles004.json',
 //     'scenes/snow/snow_particles005.json',
 //     'scenes/snow/snow_particles006.json',
 //     'scenes/snow/snow_particles007.json',
@@ -324,7 +324,8 @@ void main() {
     print('    time:  $seconds seconds'); // note: includes time for saving file
   }
 
-  // correct?
-  // added by Rose
-  //saveVideo('images/', listImages, width, height, 4);
+
+  saveVideo('images/video.mpg', listImages, width, height, 24,
+      repeatFrames: 24); 
+
 }

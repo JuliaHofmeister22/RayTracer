@@ -101,7 +101,7 @@ class Point2 extends Vector2 {
 
     String toString() => 'Point2($x, $y)';
 
-    static Point2 average(Point2 a, Point2 b) => Point2((a.x + b.x) / 2, (a.y + b.y) / 2);
+    static Point2 average(Point2 a, b) => Point2((a.x + b.x) / 2, (a.y + b.y) / 2);
 
     static Point2 lerp(Point2 a, Point2 b, double factor) => Point2(
         a.x * (1 - factor) + b.x * factor,

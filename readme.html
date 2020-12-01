@@ -40,7 +40,6 @@ Be sure to include all of the files, so that we can reproduce all of your images
 -->
 
 
-
 Author
 =============
 
@@ -53,7 +52,7 @@ Author
 ------------------|-------------
 names             | Rose White, Julia Hofmeister, Courtney Masters
 computer + OS     | Windows Latitude 5401, MacBook Pro BigSur, MacBook Pro 
-time to complete  | <!-- honestly who the heck knows -->
+time to complete  | 50 hours
 additional help   | Dr. Denning
 </div>
 
@@ -118,8 +117,19 @@ What additional tests did you run to ensure that your implementations are correc
 Courtney's Feature - Texture Mapping
 -------------------------
 
+To implement texture mapping, I added an optional texture attribute to each shape that holds a ppm image containing the desired texture. I then wrote a
+helper function that maps each point from a shape to a pixel in the image and returns color from the image for the shape.
+It returns an RGBColor that can be used in the irradience function if a texture is provided. Although this part of the project is pretty straightforward, I did have some
+trouble understanding the math and needed to get help from Dr. Denning. 
+
 Rose's Feature - Video Encoder
 -------------------------
+The video encoder takes the raytracter's rendered images and stores them in an mpeg video. This was accomplished by taking working C++ code that already performed this feature, and translating it into dart. Dr. Denning also provided his own changes to the code to make the "code translation" process easier.
+
+Syntax error bugs were the most troublesome. Fortunately if there are any bugs in the code, it is REALLY obvious. My video had read some bits and bytes wrong and was beginning to output skewed images. Another time, my video would just start and stop really fast. These were clear signs that something was wrong, and these implementations were some of my bigger bugs.
+
+As mentioned above, I'm fairly confident no bugs remain since the video converter would give obvious signals that something was wrong if it was. Either the image would appear out of place, distorted, or would just not play. Since the algorithms were already written for me, the bugs were a cause of my incorrect implementation, either of dart syntax or bit/byte factors.
+
 
 
 Creative Artifact (Julia) - *cue Elsa singing ‘Let it Go’* 
@@ -143,8 +153,6 @@ Don't include readings, lectures, but do include any help from people (including
 How did you discuss the problem with others? (ex: white-board algorithms, looking over code for bugs, looking at print out results, etc.)
 -->
 
-<!-- ... -->
-
 
 
 <!--
@@ -154,7 +162,6 @@ If you used the code from the lab challenge, explain what is shared between you 
 -->
 
 <!-- ... -->
-
 
 
 <!--
