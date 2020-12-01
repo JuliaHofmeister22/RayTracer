@@ -585,6 +585,12 @@ int jo_processDU(var data, var A, var htdc, int DC) {
 // takes in rgb image and breaks it up
 // unsigned char *mem = data
 List encode_mpeg(var data, Image img, int width, int height, int fps) {
+
+  data.put8B(0x00, 0x00, 0x01, 0xB8, 0x80, 0x08, 0x00, 0x40); // GOP header
+  data.put8B(0x00, 0x00, 0x01, 0x00, 0x00, 0x0C, 0x00, 0x00); // PIC header
+  data.put4B(0x00, 0x00, 0x01, 0x01); // Slice header
+  data.bufferBits(0x10, 6);
+
   int lastDCY = 128, lastDCCR = 128, lastDCCB = 128;
 
   for (int vblock = 0; vblock < (height / 16.0).ceil(); vblock++) {
@@ -642,10 +648,6 @@ void saveVideo(String path, List images, int width, int height, int fps,
     {repeatFrames: 1}) {
   var data = BitWriter();
 
-  data.put8B(0x00, 0x00, 0x01, 0xB8, 0x80, 0x08, 0x00, 0x40); // GOP header
-  data.put8B(0x00, 0x00, 0x01, 0x00, 0x00, 0x0C, 0x00, 0x00); // PIC header
-  data.put4B(0x00, 0x00, 0x01, 0x01); // Slice header
-  data.bufferBits(0x10, 6);
 
   // Sequence Header
   data.put4B(0x00, 0x00, 0x01, 0xB3);
