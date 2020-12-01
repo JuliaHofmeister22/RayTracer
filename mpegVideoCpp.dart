@@ -585,6 +585,12 @@ int jo_processDU(var data, var A, var htdc, int DC) {
 // takes in rgb image and breaks it up
 // unsigned char *mem = data
 List encode_mpeg(var data, Image img, int width, int height, int fps) {
+
+  data.put8B(0x00, 0x00, 0x01, 0xB8, 0x80, 0x08, 0x00, 0x40); // GOP header
+  data.put8B(0x00, 0x00, 0x01, 0x00, 0x00, 0x0C, 0x00, 0x00); // PIC header
+  data.put4B(0x00, 0x00, 0x01, 0x01); // Slice header
+  data.bufferBits(0x10, 6);
+
   int lastDCY = 128, lastDCCR = 128, lastDCCB = 128;
 
   for (int vblock = 0; vblock < (height / 16.0).ceil(); vblock++) {
@@ -642,6 +648,7 @@ void saveVideo(String path, List images, int width, int height, int fps,
     {repeatFrames: 1}) {
   var data = BitWriter();
 
+
   // Sequence Header
   data.put4B(0x00, 0x00, 0x01, 0xB3);
   // 12 bits for width, height
@@ -663,11 +670,6 @@ void saveVideo(String path, List images, int width, int height, int fps,
   data.put4B(
       0xFF, 0xFF, 0xE0, 0xA0); // used to say put8b, hope I changed this right
 
-  data.put8B(0x00, 0x00, 0x01, 0xB8, 0x80, 0x08, 0x00, 0x40); // GOP header
-  data.put8B(0x00, 0x00, 0x01, 0x00, 0x00, 0x0C, 0x00, 0x00); // PIC header
-  data.put4B(0x00, 0x00, 0x01, 0x01); // Slice header
-  data.bufferBits(0x10, 6);
-
   // encode sequence header
   for (Image image in images) {
     for (int i = 0; i < repeatFrames; i++) {
@@ -678,10 +680,9 @@ void saveVideo(String path, List images, int width, int height, int fps,
   // encode sequence end
   data.put4B(0x00, 0x00, 0x01, 0xb7); // End of Sequence
 
-
   // write encoded video out to file
   var fp = File(path);
   var sink = fp.openWrite();
   sink.add(data.getData());
-  sink.close();
+  sink.close(); 
 }
