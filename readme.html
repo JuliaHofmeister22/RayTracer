@@ -56,8 +56,13 @@ Author
                   |             
 ------------------|-------------
 names             | Rose White, Julia Hofmeister, Courtney Masters
+<<<<<<< HEAD
 computer + OS     | Windows Latitude 5401, MacBook Pro 
 time to complete  | a very long time
+=======
+computer + OS     | Windows Latitude 5401, MacBook Pro BigSur, MacBook Pro 
+time to complete  | 50 hours
+>>>>>>> c7e55f4695da570a7ba41ff6cce5fe9a804b633d
 additional help   | Dr. Denning
 </div>
 
@@ -83,8 +88,31 @@ Reference Images
 ![A room made of spheres](references/P02_02_sphere_room.png width="200px")
 
 
-Known bugs / limitations
+Julia's Feature - Procedural Motion
 -------------------------
+I implemented the visual effect of the falling snow in this video.  Using Blender, I used physics and altered the gravity for particles falling from a plane to get the effect of falling snow.
+  Each particle is rendered as an icosphere object and is colored completely white.  They are all scaled to .05, but some appear larger than others due to their proximity to the camera in the scene.
+For lighting, I initially chose to use a point light, but the shadows that it created did not give the effect that I wanted, so I changed the main light to be a spot light.  
+
+To export these particles to a scene was a bit of a challenge.  Dr. Denning helped me debug some the Depsgraph issues I was having and helped me alter his initial exporter code to be able to handle particles.  
+I exported 24 scenes of falling snow for this project, each one 5 frames apart from each other in my Snow_Particles.blend file, at 192x108 resolution.  I later changed this resolution to 360x360 so that the 
+images were a bit clearer, but also didn’t take an extremely long time to render.  
+
+This feature is important because it is the animation of our video, and also because it is a feature that can be used to make some very cool effects.  Other ways that we considered using this feature was 
+to implement different season - perhaps making rain fall hard or changing the way the snow fell to make it look like the scene was very windy. Outside of this project, I can see this feature being used in 
+a variety of situations (pieces of a building falling after an explosion, for example).
+
+I’m not sure what limitations this feature has.  I think depending on what you want to do, there is probably a way to do it in Blender, or at least a way to fake it.  
+For me, the only limitation that I ran into was my own lack of knowledge in how to use Blender.
+
+A couple things that I learned from working on this feature are very closely related to working with Blender. Not having used Blender before, I spent quite a bit of time learning how to navigate the tools 
+and figuring out how to make the particles fall how I wanted them to.  Navigating light intensity was also something that I learned from this feature - I needed my light to be bright enough to capture the 
+particles in the scene, but not too bright that it washed out the color of the ice sphere in scenes.  
+
+As mentioned above, a few issues that I ran into were related to the exporter, which Dr. Denning helped me fix.  I also struggled with scaling the particles to the correct size - I had scaled the particles 
+themselves instead of the icosphere they were imitating.  
+
+
 
 <!--
 What bugs or limitations were troublesome?
@@ -96,6 +124,29 @@ What additional tests did you run to ensure that your implementations are correc
 
 <!-- ... -->
 
+Courtney's Feature - Texture Mapping
+-------------------------
+
+Rose's Feature - Video Encoder
+-------------------------
+The video encoder takes the raytracter's rendered images and stores them in an mpeg video. This was accomplished by taking working C++ code that already performed this feature, and translating it into dart. Dr. Denning also provided his own changes to the code to make the "code translation" process easier.
+
+Syntax error bugs were the most troublesome. Fortunately if there are any bugs in the code, it is REALLY obvious. My video had read some bits and bytes wrong and was beginning to output skewed images. Another time, my video would just start and stop really fast. These were clear signs that something was wrong, and these implementations were some of my bigger bugs.
+
+As mentioned above, I'm fairly confident no bugs remain since the video converter would give obvious signals that something was wrong if it was. Either the image would appear out of place, distorted, or would just not play. Since the algorithms were already written for me, the bugs were a cause of my incorrect implementation, either of dart syntax or bit/byte factors.
+
+
+
+Creative Artifact (Julia) - *cue Elsa singing ‘Let it Go’* 
+-------------------------
+I used what I learned from my procedural motion feature and designed a creative artifact for this project by simulating a “snow flurry”.  The scenes for this section of the video were created by using
+ a Bezier curve in blender, and then activating a force field (type is curve guide) to pull particles along the curve.  The particles are again rendered as an icosphere object and scaled to .05. 
+
+I exported 21 scenes to show this artifact at the end of our video.  Each scene was exported using the same exporter that I used for the falling snow scenes, and they are 2-3 frames apart from each
+ other in my snow_flurry.blend file and are currently being rendered at 360x360.
+
+*note: I had some issues with the camera view for this file.  For some reason, what I was seeing from the view is not the same as what would render for the same timestamp.  I ended up having to just move
+ the camera around enough so that what I rendered would show the flurry as I wanted it to, but I still do not understand why the camera was not showing me the view that should have rendered.
 
 
 Reflection
@@ -107,6 +158,7 @@ Don't include readings, lectures, but do include any help from people (including
 How did you discuss the problem with others? (ex: white-board algorithms, looking over code for bugs, looking at print out results, etc.)
 -->
 
+<<<<<<< HEAD
 this 
 
 
@@ -118,6 +170,12 @@ If you used the code from the lab challenge, explain what is shared between you 
 -->
 
 <!-- ... -->
+=======
+Rose - My help came mostly from Dr. Denning, getting more information and advice on how to "translate" c++ code to dart code. I consulted with Courtney and Julia on some of my bugs, and made many visits to stack overflow.
+My problems were mainly syntax-based. I'm still not super familiar with Dart and bit/ byte transfering, so there was a lot I had to learn to successfully implement the Mpeg Video Converter. 
+I spent probably two hours writing code, and 24+ hours debugging. I also spent around 5 hours discussing the code with others (Dr. Denning and team).
+I learned a lot about dart and bit transfering through this project. I felt under-prepared to do this specific part of the project though and probably would've chosen a different elective if I could go back. I also felt bad 1) becasue I kept slacking Dr. Denning for three days straight for help and 2) my work held the rest of the team back from completing the project in the time they hoped to have it finished.
+>>>>>>> c7e55f4695da570a7ba41ff6cce5fe9a804b633d
 
 
 
