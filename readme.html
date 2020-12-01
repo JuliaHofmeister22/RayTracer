@@ -39,11 +39,6 @@ Be sure to include all of the files, so that we can reproduce all of your images
 
 -->
 
-To implement texture mapping, I (Courtney) added an optional texture attribute to each shape that holds a ppm image containing the desired texture. I then wrote a
-helper function that maps each point from a shape to a pixel in the image and returns color from the image for the shape.
-It returns an RGBColor that can be used in the irradience function if a texture is provided. Although this part of the project is pretty straightforward, I did have some
-trouble understanding the math and needed to get help from Dr. Denning. 
-
 
 Author
 =============
@@ -56,13 +51,8 @@ Author
                   |             
 ------------------|-------------
 names             | Rose White, Julia Hofmeister, Courtney Masters
-<<<<<<< HEAD
-computer + OS     | Windows Latitude 5401, MacBook Pro 
-time to complete  | a very long time
-=======
 computer + OS     | Windows Latitude 5401, MacBook Pro BigSur, MacBook Pro 
 time to complete  | 50 hours
->>>>>>> c7e55f4695da570a7ba41ff6cce5fe9a804b633d
 additional help   | Dr. Denning
 </div>
 
@@ -127,6 +117,11 @@ What additional tests did you run to ensure that your implementations are correc
 Courtney's Feature - Texture Mapping
 -------------------------
 
+To implement texture mapping, I added an optional texture attribute to each shape that holds a ppm image containing the desired texture. I then wrote a
+helper function that maps each point from a shape to a pixel in the image and returns color from the image for the shape.
+It returns an RGBColor that can be used in the irradience function if a texture is provided. Although this part of the project is pretty straightforward, I did have some
+trouble understanding the math and needed to get help from Dr. Denning. 
+
 Rose's Feature - Video Encoder
 -------------------------
 The video encoder takes the raytracter's rendered images and stores them in an mpeg video. This was accomplished by taking working C++ code that already performed this feature, and translating it into dart. Dr. Denning also provided his own changes to the code to make the "code translation" process easier.
@@ -157,9 +152,6 @@ Describe whatever help (if any) that you received.
 Don't include readings, lectures, but do include any help from people (including course staff, lab TAs, classmates, and friends) and attribute them by name.
 How did you discuss the problem with others? (ex: white-board algorithms, looking over code for bugs, looking at print out results, etc.)
 -->
-
-<<<<<<< HEAD
-this 
 
 
 
