@@ -72,10 +72,12 @@ Replace it with meaningful content.
 Reference Images
 ---------------------
 
+![Our video, non mpeg version](ffmpegSnowMovie.mp4 width="200px")
 
 ![Beginning Scene](images/snowPNG/snow_particles000.png width="200px") ![Middle Scene](images/snowPNG/snow_particles008.png width="200px") ![End Scene](images/snowPNG/snow_particles022.png width="200px")
 
 ![Snow Flurry Beginning Scene](images/snowPNG/snow_xflurry001.png width="200px") ![Snow Flurry Middle Scene](images/snowPNG/snow_xflurry009.png width="200px") ![Snow Flurry End Scene](images/snowPNG/snow_xflurry017.png width="200px")
+
 
 
 Julia's Feature - Procedural Motion
@@ -125,6 +127,15 @@ helper function that maps each point from a shape to a pixel in the image and re
 It returns an RGBColor that can be used in the irradience function if a texture is provided. Although this part of the project is pretty straightforward, I did have some
 trouble understanding the math and needed to get help from Dr. Denning. 
 
+The majority of my time was spent reading through slides and trying to figure out what part of the raytracer needed to
+be modified. It took me a while to actually understand that I needed to map pixels from an image to a shape. I always feel a little
+hesitant to modeify existing classes but I knew that I had to add a texture attribute to have access to a ppm image to get texture from.
+Even after that, the math felt pretty complicated to me and I had to get some guidence from Dr. Denning with the specific syntax for the theta
+and phi. After I finished, I felt like I understood everything pretty well, and I think I could easily redo it if need be.
+I did not really discuss with anyone else on this. Like I mentioned, the majority of my time was spent reading online resources and looking
+through slides. I wasn't sure I was even close to the right track, and to be honest, I got pretty lucky that I started in the right direction
+because I was unsure of what I was doing for most of the first steps.
+
 Rose's Feature - Video Encoder
 -------------------------
 The video encoder takes the raytracter's rendered images and stores them in an mpeg video. This was accomplished by taking working C++ code that already performed this feature, and translating it into dart. Dr. Denning also provided his own changes to the code to make the "code translation" process easier.
@@ -133,6 +144,11 @@ Syntax error bugs were the most troublesome. Fortunately if there are any bugs i
 
 As mentioned above, I'm fairly confident no bugs remain since the video converter would give obvious signals that something was wrong if it was. Either the image would appear out of place, distorted, or would just not play. Since the algorithms were already written for me, the bugs were a cause of my incorrect implementation, either of dart syntax or bit/byte factors.
 
+
+Reflection: I recieve many hours of help from Dr. Denning, and also was able to bounce ideas off my teammates. I also got onto several coding websites to try and understand dart better. The biggest problems I encountered were syntax issues, code placement, and not being able to make the video play (another code placement issue).
+I probablt spent 2 hours writing code, and 20-25 hours debugging it. Another few hours were spent on correctly using Git so that I didn't delete anything again...
+
+This project taught me to be a better debugger, and made me more familiar with dart. This project also built character because it took a lot of patience to work through. I think the idea of a video converter is super cool, but this particular elective definitely took longer and was more difficult to complete than expected. If I could go back, I'd probably choose to do another elective so I wouldn't have held my team back for so long, but I also appreciate the creativity in tasks we were able to choose from.
 
 
 Creative Artifact (Julia) - *cue Elsa singing ‘Let it Go’* 
