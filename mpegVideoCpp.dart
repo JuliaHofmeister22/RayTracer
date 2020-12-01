@@ -682,5 +682,5 @@ void saveVideo(String path, List images, int width, int height, int fps,
   var fp = File(path);
   var sink = fp.openWrite();
   sink.add(data.getData());
-  sink.close();
+  sink.close(); 
 }
