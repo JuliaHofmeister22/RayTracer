@@ -17,12 +17,59 @@ var width;
 var height;
 
 List<String> scenePaths = [
-  // 'scenes/P04_00_triangle.json',
-  // 'scenes/P04_01_scene.json',
-  'scenes/P04_02_animation001.json',
-  'scenes/P04_02_animation002.json',
-  'scenes/P04_02_animation003.json',
-  'scenes/P04_02_animation004.json',
+//    'scenes/P04_00_triangle.json',
+//    'scenes/P04_01_scene.json',
+//    'scenes/P04_02_animation001.json',
+//    'scenes/P04_02_animation002.json',
+//    'scenes/P04_02_animation003.json',
+//    'scenes/P04_02_animation004.json',
+
+//    'scenes/snow/snow_particles000.json',
+//   'scenes/snow/snow_particles001.json',
+//    'scenes/snow/snow_particles002.json',
+//     'scenes/snow/snow_particles003.json',
+//     'scenes/snow/snow_particles004.json',
+//     'scenes/snow/snow_particles005.json',
+//     'scenes/snow/snow_particles006.json',
+//     'scenes/snow/snow_particles007.json',
+//     'scenes/snow/snow_particles008.json',
+//     'scenes/snow/snow_particles009.json',
+//     'scenes/snow/snow_particles010.json',
+//     'scenes/snow/snow_particles011.json',
+//     'scenes/snow/snow_particles012.json',
+//     'scenes/snow/snow_particles013.json',
+//     'scenes/snow/snow_particles014.json',
+//     'scenes/snow/snow_particles015.json',
+//     'scenes/snow/snow_particles016.json',
+//     'scenes/snow/snow_particles017.json',
+//     'scenes/snow/snow_particles018.json',
+//     'scenes/snow/snow_particles019.json',
+//     'scenes/snow/snow_particles020.json',
+//     'scenes/snow/snow_particles021.json',
+//     'scenes/snow/snow_particles022.json',
+//     'scenes/snow/snow_particles023.json',
+//  'scenes/snow/snow_flurry000.json',
+//  'scenes/snow/snow_flurry001.json',
+//  'scenes/snow/snow_flurry002.json',
+//  'scenes/snow/snow_flurry003.json',
+//  'scenes/snow/snow_flurry004.json',
+//  'scenes/snow/snow_flurry005.json',
+//  'scenes/snow/snow_flurry006.json',
+//  'scenes/snow/snow_flurry007.json',
+//  'scenes/snow/snow_flurry008.json',
+//  'scenes/snow/snow_flurry009.json',
+//  'scenes/snow/snow_flurry010.json',
+//  'scenes/snow/snow_flurry011.json',
+//  'scenes/snow/snow_flurry012.json',
+//  'scenes/snow/snow_flurry013.json',
+//  'scenes/snow/snow_flurry014.json',
+//  'scenes/snow/snow_flurry014.json',
+//  'scenes/snow/snow_flurry015.json',
+//  'scenes/snow/snow_flurry016.json',
+//  'scenes/snow/snow_flurry017.json',
+//  'scenes/snow/snow_flurry018.json',
+//  'scenes/snow/snow_flurry019.json',
+//  'scenes/snow/snow_flurry020.json',
 ];
 
 // Determines if given ray intersects any surface in the scene.
@@ -133,6 +180,29 @@ Intersection intersectRayScene(Scene scene, Ray ray) {
   return intersection;
 }
 
+// helper function that maps point from sphere to image and returns color from image for sphere
+RGBColor textureColor(Scene scene, Intersection intersection){
+    Point p  = intersection.o;
+    var u; // theta
+    var v; // phi
+
+    u = acos(intersection.n.z);
+    v = atan2(intersection.n.y, intersection.n.x);
+    //print("$u $v");
+
+    // convert from [-pi/2, pi/2] -> [0,1]
+    u = (u + (pi/2)) / pi; 
+    // convert from [0,2pi] -> [0,1]
+    v = (v+pi) / (2*pi);
+
+    // convert to match width/height of texture image
+    u = u * intersection.material.texture.width;
+    v = v * intersection.material.texture.height;
+
+    return RGBColor.fromColor(intersection.material.texture.getPixel(u, v));
+
+}
+
 // Computes irradiance (as RGBColor) from scene along ray
 RGBColor irradiance(Scene scene, Ray ray, int depth) {
   Intersection intersection = intersectRayScene(scene, ray);
@@ -146,6 +216,11 @@ RGBColor irradiance(Scene scene, Ray ray, int depth) {
   double n = intersection.material.n;
   RGBColor kr = intersection.material.kr;
 
+  if(intersection.material.texture != null){
+      //set kd to the texture in file
+      kd = textureColor(scene, intersection);
+    }
+
   // start accumulating irradiance
   RGBColor c = kd * scene.ambientIntensity;
 
@@ -156,7 +231,7 @@ RGBColor irradiance(Scene scene, Ray ray, int depth) {
     Ray shadowRay = Ray(p, l, t_max: dist);
     if (intersectRayScene(scene, shadowRay) != null) continue;
     Direction h = Direction.fromVector(l + v);
-    RGBColor L = light.intensity / (dist * dist);
+    RGBColor L = (light.intensity/500) / (dist * dist);
     c += L *
         (kd + ks * pow(max(0, intersection.n.dot(h)), n)) *
         max(intersection.n.dot(l), 0.0);
@@ -249,6 +324,8 @@ void main() {
     print('    time:  $seconds seconds'); // note: includes time for saving file
   }
 
-  saveVideo('images/video3.mpg', listImages, width, height, 24,
+
+  saveVideo('images/video.mpg', listImages, width, height, 24,
       repeatFrames: 24);
+
 }
