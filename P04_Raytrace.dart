@@ -24,11 +24,11 @@ List<String> scenePaths = [
 //    'scenes/P04_02_animation003.json',
 //    'scenes/P04_02_animation004.json',
 
-//    'scenes/snow/snow_particles000.json',
-//   'scenes/snow/snow_particles001.json',
-//    'scenes/snow/snow_particles002.json',
-//     'scenes/snow/snow_particles003.json',
-//     'scenes/snow/snow_particles004.json',
+   'scenes/snow/snow_particles000.json',
+  'scenes/snow/snow_particles001.json',
+   'scenes/snow/snow_particles002.json',
+    'scenes/snow/snow_particles003.json',
+    'scenes/snow/snow_particles004.json',
 //     'scenes/snow/snow_particles005.json',
 //     'scenes/snow/snow_particles006.json',
 //     'scenes/snow/snow_particles007.json',
@@ -313,7 +313,7 @@ void main() {
     width = scene.resolution.width;
     height = scene.resolution.height;
     var seconds =
-        watch.elapsedMilliseconds / 100000.0; // determine elapsed time in seconds
+        watch.elapsedMilliseconds / 1000.0; // determine elapsed time in seconds
 
     image.saveImage(ppmPath,
         asBinary: writeImageInBinary); // write raytraced image to PPM file
