@@ -359,7 +359,7 @@ const s_jo_ZigZag = [
 // wrapper for put1B, put4b, put8B, data.bufferBits
 
 class BitWriter {
-  List _data = [];
+  List<int> _data = [];
   int _bitbuf = 0, _bitcnt = 0;
 
   Uint8List getData() {
@@ -514,14 +514,15 @@ void jo_DCT(List<double> array, i0, i1, i2, i3, i4, i5, i6, i7) {
 // takes in a single block and writes it out
 int jo_processDU(var data, var A, var htdc, int DC) {
   for (int dataOff = 0; dataOff < 64; dataOff += 8) {
-    jo_DCT(A, A[0 + dataOff], A[1 + dataOff], A[2 + dataOff], A[3 + dataOff],
-        A[4 + dataOff], A[5 + dataOff], A[6 + dataOff], A[7 + dataOff]);
+    jo_DCT(A, 0 + dataOff, 1 + dataOff, 2 + dataOff, 3 + dataOff, 4 + dataOff,
+        5 + dataOff, 6 + dataOff, 7 + dataOff);
   }
   for (int dataOff = 0; dataOff < 8; ++dataOff) {
-    jo_DCT(A, A[0 + dataOff], A[8 + dataOff], A[16 + dataOff], A[24 + dataOff],
-        A[32 + dataOff], A[40 + dataOff], A[48 + dataOff], A[56 + dataOff]);
+    jo_DCT(A, 0 + dataOff, 8 + dataOff, 16 + dataOff, 24 + dataOff,
+        32 + dataOff, 40 + dataOff, 48 + dataOff, 56 + dataOff);
   }
-  List<int> Q = [64]; // ?
+  // List<int> Q = [64];
+  var Q = List<int>(64);
   for (int i = 0; i < 64; ++i) {
     var v = A[i] * s_jo_quantTbl[i];
     Q[s_jo_ZigZag[i]] = (v < 0 ? (v - 0.5).ceil() : (v + 0.5).floor());
@@ -531,8 +532,7 @@ int jo_processDU(var data, var A, var htdc, int DC) {
   int aDC = DC < 0 ? -DC : DC;
   int size = 0;
   int tempval = aDC;
-  var bits = [data]; // ?
-  while (tempval == true) {
+  while (tempval > 0) {
     size++;
     tempval >>= 1;
   }
@@ -564,20 +564,20 @@ int jo_processDU(var data, var A, var htdc, int DC) {
       }
     }
     // if (!size) {
-    if (size == false) {
-      data.bufferBits(bits, 1, 6);
-      data.bufferBits(bits, run, 6);
+    if (size == 0) {
+      data.bufferBits(1, 6);
+      data.bufferBits(run, 6);
       if (AC < -127) {
-        data.bufferBits(bits, 128, 8);
+        data.bufferBits(128, 8);
       } else if (AC > 127) {
-        data.bufferBits(bits, 0, 8);
+        data.bufferBits(0, 8);
       }
       code = AC & 255; // c++?
       size = 8;
     }
-    data.bufferBits(bits, code, size);
+    data.bufferBits(code, size);
   }
-  data.bufferBits(bits, 2, 2);
+  data.bufferBits(2, 2);
 
   return Q[0];
 }
@@ -585,9 +585,62 @@ int jo_processDU(var data, var A, var htdc, int DC) {
 // takes in rgb image and breaks it up
 // unsigned char *mem = data
 List encode_mpeg(var data, Image img, int width, int height, int fps) {
-  var originalData = data;
   int lastDCY = 128, lastDCCR = 128, lastDCCB = 128;
-  var bits = [data];
+
+  for (int vblock = 0; vblock < (height / 16.0).ceil(); vblock++) {
+    for (int hblock = 0; hblock < (width / 16.0).ceil(); hblock++) {
+      data.bufferBits(3, 2);
+
+      var Y = List<double>(256);
+      var CBx = List<double>(256);
+      var CRx = List<double>(256);
+      for (int i = 0; i < 256; ++i) {
+        int y = vblock * 16 + (i ~/ 16);
+        int x = hblock * 16 + (i & 15);
+        x = x >= width ? width - 1 : x;
+        y = y >= height ? height - 1 : y;
+        //const unsigned char *c = rgbx + y*width*4+x*4;
+        // const unsigned char *c = rgbx + y*width*3+x*3;
+        var c = img.getPixel(x, y);
+        var r = c.redAsInt();
+        var g = c.greenAsInt();
+        var b = c.blueAsInt();
+        Y[i] = (0.59 * r + 0.30 * g + 0.11 * b) * (219 / 255) + 16;
+        CBx[i] = (-0.17 * r - 0.33 * g + 0.50 * b) * (224 / 255) + 128;
+        CRx[i] = (0.50 * r - 0.42 * g - 0.08 * b) * (224 / 255) + 128;
+      }
+
+      // Downsample Cb,Cr (420 format)
+      var CB = List<double>(64);
+      var CR = List<double>(64);
+      for (int i = 0; i < 64; ++i) {
+        int j = (i & 7) * 2 + (i & 56) * 4;
+        CB[i] = (CBx[j] + CBx[j + 1] + CBx[j + 16] + CBx[j + 17]) * 0.25;
+        CR[i] = (CRx[j] + CRx[j + 1] + CRx[j + 16] + CRx[j + 17]) * 0.25;
+      }
+
+      for (int k1 = 0; k1 < 2; ++k1) {
+        for (int k2 = 0; k2 < 2; ++k2) {
+          var block = List<double>(64);
+          for (int i = 0; i < 64; i += 8) {
+            int j = (i & 7) + (i & 56) * 2 + k1 * 8 * 16 + k2 * 8;
+            // memcpy(block+i, Y+j, 8*sizeof(Y[0]));
+            for (int p = 0; p < 8; p++) {
+              block[p + i] = Y[p + j];
+            }
+          }
+          lastDCY = jo_processDU(data, block, s_jo_HTDC_Y, lastDCY);
+        }
+      }
+      lastDCCB = jo_processDU(data, CB, s_jo_HTDC_C, lastDCCB);
+      lastDCCR = jo_processDU(data, CR, s_jo_HTDC_C, lastDCCR);
+    }
+  }
+}
+
+void saveVideo(String path, List images, int width, int height, int fps,
+    {repeatFrames: 1}) {
+  var data = BitWriter();
 
   // Sequence Header
   data.put4B(0x00, 0x00, 0x01, 0xB3);
@@ -607,79 +660,24 @@ List encode_mpeg(var data, Image img, int width, int height, int fps) {
   } else {
     data.put1B(0x18); // 60fps
   }
-  data.put4B(0xFF, 0xFF, 0xE0, 0xA0); // used to say put8b, hope I changed this right
+  data.put4B(
+      0xFF, 0xFF, 0xE0, 0xA0); // used to say put8b, hope I changed this right
 
   data.put8B(0x00, 0x00, 0x01, 0xB8, 0x80, 0x08, 0x00, 0x40); // GOP header
   data.put8B(0x00, 0x00, 0x01, 0x00, 0x00, 0x0C, 0x00, 0x00); // PIC header
   data.put4B(0x00, 0x00, 0x01, 0x01); // Slice header
-  data.bufferBits(bits, 0x10, 6);
+  data.bufferBits(0x10, 6);
 
-  for (int vblock = 0; vblock < (height + 15) / 16; vblock++) {
-    for (int hblock = 0; hblock < (width + 15) / 16; hblock++) {
-      data.bufferBits(bits, 3, 2);
-
-      List<double> Y = [256];
-      List<double> CBx = [256];
-      List<double> CRx = [256];
-      for (int i = 0; i < 256; ++i) {
-        double y = vblock * 16 + (i / 16);
-        int x = hblock * 16 + (i & 15);
-        x = x >= width ? width - 1 : x;
-        y = y >= height ? height - 1 : y;
-        //const unsigned char *c = rgbx + y*width*4+x*4;
-        // const unsigned char *c = rgbx + y*width*3+x*3;
-        var c = img.getPixel(x, y);
-        var r = c.red,
-            g = c.green,
-            b = c.blue; // ? is this what I want to do here?
-        Y[i] = (0.59 * r + 0.30 * g + 0.11 * b) * (219 / 255) + 16;
-        CBx[i] = (-0.17 * r - 0.33 * g + 0.50 * b) * (224 / 255) + 128;
-        CRx[i] = (0.50 * r - 0.42 * g - 0.08 * b) * (224 / 255) + 128;
-      }
-
-      // Downsample Cb,Cr (420 format)
-      List<double> CB = [64]; // ?
-      List<double> CR = [64];
-      for (int i = 0; i < 64; ++i) {
-        int j = (i & 7) * 2 + (i & 56) * 4;
-        CB[i] = (CBx[j] + CBx[j + 1] + CBx[j + 16] + CBx[j + 17]) * 0.25;
-        CR[i] = (CRx[j] + CRx[j + 1] + CRx[j + 16] + CRx[j + 17]) * 0.25;
-      }
-
-      for (int k1 = 0; k1 < 2; ++k1) {
-        for (int k2 = 0; k2 < 2; ++k2) {
-          List<int> block = [64];
-          for (int i = 0; i < 64; i += 8) {
-            int j = (i & 7) + (i & 56) * 2 + k1 * 8 * 16 + k2 * 8;
-            // memcpy(block+i, Y+j, 8*sizeof(Y[0]));
-            for (int p = 0; p < 7; p++) {
-              block[p + i] = Y[p + j] as int; // ? is this okay?
-            }
-          }
-          lastDCY = jo_processDU(bits, block, s_jo_HTDC_Y, lastDCY);
-        }
-      }
-      lastDCCB = jo_processDU(bits, CB, s_jo_HTDC_C, lastDCCB);
-      lastDCCR = jo_processDU(bits, CR, s_jo_HTDC_C, lastDCCR);
-    }
-  }
-  data.bufferBits(bits, 0, 7);
-  data.put4B(0x00, 0x00, 0x01, 0xb7); // End of Sequence
-  // size is very small, safe to cast to `int`
-  return (data - originalData);
-}
-
-void saveVideo(String path, List images, int width, int height, int fps,
-    {repeatFrames: 1}) {
-  var data = BitWriter();
   // encode sequence header
   for (Image image in images) {
     for (int i = 0; i < repeatFrames; i++) {
       // encode image
-      data._data += encode_mpeg(data, image, width, height, fps);
+      encode_mpeg(data, image, width, height, fps);
     }
   }
   // encode sequence end
+  data.put4B(0x00, 0x00, 0x01, 0xb7); // End of Sequence
+
 
   // write encoded video out to file
   var fp = File(path);
